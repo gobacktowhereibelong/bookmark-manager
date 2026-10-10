@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookmark Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">B</span><span>Bookmark<br><strong>Manager</strong></span></div>
+      <button class="primary-button" id="save-tabs-button"><span>＋</span> Simpan semua tab</button>
+      <nav class="folder-nav" id="folder-nav" aria-label="Folder bookmark">
+        <div class="nav-label"><span>KOLEKSI</span><button class="icon-button" id="new-folder-button" title="Buat folder">＋</button></div>
+        <button class="folder-link active" data-folder-id="all"><span class="folder-icon">▦</span><span>Semua bookmark</span><span class="folder-count" id="all-count">0</span></button>
+        <div id="folder-list"></div>
+      </nav>
+      <div class="sidebar-footer"><span class="status-dot"></span><span>Data tersimpan lokal di Chrome</span></div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div><p class="eyebrow">RUANG KERJA PRIBADI</p><h1>Bookmark kamu</h1></div>
+        <div class="top-actions"><label class="search-box"><span>⌕</span><input id="search-input" type="search" placeholder="Cari bookmark..." aria-label="Cari bookmark"></label><button class="avatar" title="Bookmark Manager">BM</button></div>
+      </header>
+      <section class="overview-grid">
+        <article class="stat-card accent"><div class="stat-icon">✦</div><div><span>Total bookmark</span><strong id="bookmark-count">0</strong></div><small>di semua koleksi</small></article>
+        <article class="stat-card"><div class="stat-icon warm">◷</div><div><span>Ditambahkan minggu ini</span><strong id="recent-count">0</strong></div><small>bookmark baru</small></article>
+        <article class="stat-card"><div class="stat-icon blue">⌁</div><div><span>Folder aktif</span><strong id="folder-count">0</strong></div><small>koleksi tersusun</small></article>
+      </section>
+      <section class="content-section">
+        <div class="section-heading"><div><p class="eyebrow" id="section-eyebrow">SEMUA KOLEKSI</p><h2 id="section-title">Semua bookmark</h2></div>
+          <div class="filter-bar"><select id="sort-select" aria-label="Urutkan bookmark"><option value="newest">Terbaru</option><option value="oldest">Terlama</option></select><select id="month-select" aria-label="Filter bulan"><option value="all">Semua bulan</option></select><button class="scan-button" id="scan-duplicates-button" title="Cek duplikat">⧉ Cek duplikat</button></div>
+          <button class="outline-button" id="add-bookmark-button">＋ Tambah bookmark</button></div>
+        <div id="empty-state" class="empty-state" hidden><div class="empty-art">✦</div><h3 id="empty-title">Belum ada bookmark</h3><p id="empty-copy">Simpan halaman penting agar mudah ditemukan kembali.</p><button class="primary-button" id="empty-action">Tambah bookmark</button></div>
+        <div id="bookmark-grid" class="bookmark-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="folder-edit-dialog"><form method="dialog" id="folder-edit-form"><div class="dialog-header"><div><p class="eyebrow">EDIT KOLEKSI</p><h2>Edit folder</h2></div><button class="close-button" value="cancel" aria-label="Tutup">×</button></div><label>Nama folder<input id="folder-edit-name-input" required maxlength="50"></label><div class="dialog-actions"><button class="outline-button" value="cancel">Batal</button><button class="primary-button" value="default">Simpan</button></div></form></dialog>
+
+  <dialog id="move-dialog"><form method="dialog" id="move-form"><div class="dialog-header"><div><p class="eyebrow">PINDAHKAN</p><h2>Pindah ke folder</h2></div><button class="close-button" value="cancel" aria-label="Tutup">×</button></div><p class="move-bookmark-title" id="move-title"></p><label>Folder tujuan<select id="move-folder-select"></select></label><div class="dialog-actions"><button class="outline-button" value="cancel">Batal</button><button class="primary-button" value="default" id="move-confirm">Pindahkan</button></div></form></dialog>
+
+  <dialog id="style-dialog"><form method="dialog" id="style-form"><div class="dialog-header"><div><p class="eyebrow">TAMPILAN</p><h2>Kustom kartu</h2></div><button class="close-button" value="cancel" aria-label="Tutup">×</button></div><label>Nama tampilan<input id="style-title-input" maxlength="120" placeholder="Kosongkan untuk pakai judul asli"></label><label>Warna background<input id="style-color-input" type="color" value="#ffffff"></label><label>URL gambar background<input id="style-image-input" type="url" placeholder="https://example.com/gambar.jpg"></label><label>Gambar dari perangkat<input id="style-file-input" type="file" accept="image/*"></label><label>Gelapkan gambar <input id="style-dim-input" type="range" min="0" max="80" value="35"></label><div class="dialog-actions"><button type="button" class="outline-button" id="style-reset-button">Reset</button><button type="button" class="outline-button" value="cancel">Batal</button><button class="primary-button" value="default">Simpan</button></div></form></dialog>
+
+  <dialog id="wallpaper-dialog"><form method="dialog" id="wallpaper-form"><div class="dialog-header"><div><p class="eyebrow">TAMPILAN UTAMA</p><h2>Background dashboard</h2></div><button class="close-button" value="cancel" aria-label="Tutup">×</button></div><label>URL gambar<input id="wallpaper-url-input" type="url" placeholder="https://example.com/gambar.jpg"></label><label>Gambar dari perangkat<input id="wallpaper-file-input" type="file" accept="image/*"></label><label>Gelapkan gambar <input id="wallpaper-dim-input" type="range" min="0" max="85" value="30"></label><div class="dialog-actions"><button type="button" class="outline-button" id="wallpaper-reset-button">Reset</button><button type="button" class="outline-button" value="cancel">Batal</button><button class="primary-button" value="default">Simpan</button></div></form></dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+  <button class="theme-fab" id="theme-fab" title="Atur tampilan dashboard">🎨</button>
+  <div class="dim-popup" id="dim-popup" hidden><div class="dim-popup-head"><span>Atur tampilan</span><button class="icon-button" id="dim-popup-close" aria-label="Tutup">×</button></div><div class="dim-row"><span>Gelapkan</span><input id="dim-slider" type="range" min="0" max="85" value="30"></div><div class="dim-row"><span>Warna teks</span><input id="text-color-input" type="color" value="#17211f"></div><div class="dim-actions"><button type="button" class="outline-button" id="theme-reset-button">Reset</button><button type="button" class="outline-button" id="dim-popup-change">Ganti gambar…</button></div></div>
+
+  <dialog id="bookmark-dialog"><form method="dialog" id="bookmark-form"><div class="dialog-header"><div><p class="eyebrow">BOOKMARK BARU</p><h2>Simpan halaman</h2></div><button class="close-button" value="cancel" aria-label="Tutup">×</button></div><label>Judul<input id="title-input" required maxlength="120"></label><label>URL<input id="url-input" type="url" required placeholder="https://example.com"></label><label>Folder<select id="folder-select"></select></label><div class="dialog-actions"><button class="outline-button" value="cancel">Batal</button><button class="primary-button" value="default">Simpan bookmark</button></div></form></dialog>
+
+  <dialog id="folder-dialog"><form method="dialog" id="folder-form"><div class="dialog-header"><div><p class="eyebrow">KOLEKSI BARU</p><h2>Buat folder</h2></div><button class="close-button" value="cancel" aria-label="Tutup">×</button></div><label>Nama folder<input id="folder-name-input" required maxlength="50" placeholder="Misalnya: Belajar"></label><label>Folder induk (opsional)<select id="folder-parent-select"><option value="">— Tidak ada (folder utama) —</option></select></label><div class="dialog-actions"><button class="outline-button" value="cancel">Batal</button><button class="primary-button" value="default">Buat folder</button></div></form></dialog>
+
+  <dialog id="duplicates-dialog" class="duplicates-dialog-box"><div class="dialog-header"><div><p class="eyebrow">PEMELIHARAAN</p><h2>Duplikat ditemukan</h2></div><button class="close-button" id="duplicates-close" aria-label="Tutup">×</button></div><p class="duplicates-summary" id="duplicates-summary"></p><div class="duplicates-list" id="duplicates-list"></div><div class="dialog-actions"><button class="outline-button" id="duplicates-close-2">Tutup</button><button class="danger-button" id="remove-duplicates-button">Hapus bookmark terpilih</button></div></dialog>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

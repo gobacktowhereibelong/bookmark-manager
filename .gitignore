@@ -1,0 +1,12 @@
+# OS / editor
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Node (jika nanti pakai tooling)
+node_modules/

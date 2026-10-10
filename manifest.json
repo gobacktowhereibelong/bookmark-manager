@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Bookmark Manager Personal",
+  "version": "1.0.0",
+  "description": "Kelola bookmark dan simpan tab yang sedang terbuka dengan cepat.",
+  "permissions": ["bookmarks", "tabs"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Buka Bookmark Manager"
+  },
+  "chrome_url_overrides": {
+    "newtab": "dashboard.html"
+  }
+}
